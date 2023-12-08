@@ -1,7 +1,7 @@
 import requests
 import string
 
-header = {"Cookie": "PHPSESSID=;"}
+header = {"Cookie": "PHPSESSID=❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚;"}
 url = "https://los.rubiya.kr/chall/xavis_04f071ecdadb4296361d2101e4a2c390.php"
 string_data = string.digits + string.ascii_letters
 
