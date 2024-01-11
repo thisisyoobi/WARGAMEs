@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+
+'''
+# Summary
+- We don't have to get ADMIN, just bypass QUERY is enough
+- make it true QUERY
+'''
+
+
 import requests
 
 header = {"Cookie": "PHPSESSID=❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚❚;"}
