@@ -2,7 +2,7 @@
 
 '''
 # Summary
-- we can use ||, && instead of OR, AND
+- if the filter do not filter lower or upper case, we can bypass it
 '''
 
 
