@@ -2,7 +2,7 @@
 
 '''
 # Summary
-- we can use ||, && instead of OR, AND
+- if the filter replace something, we can predict after the replace func() to bypass it
 '''
 
 
