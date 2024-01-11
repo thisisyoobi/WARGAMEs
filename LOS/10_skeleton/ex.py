@@ -2,7 +2,7 @@
 
 '''
 # Summary
-- we can use ||, && instead of OR, AND
+- use # (%23) to ignore that we dont want
 '''
 
 
