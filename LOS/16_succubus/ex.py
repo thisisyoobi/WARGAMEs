@@ -2,7 +2,7 @@
 
 '''
 # Summary
-- use can use %0b (vertial tab), %0c (NP form feed, new page) instead of \n \r \t.
+- We can make ' as a STR (\') using \ (backslash)
 '''
 
 
