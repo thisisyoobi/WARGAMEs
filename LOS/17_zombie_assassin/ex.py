@@ -2,7 +2,7 @@
 
 '''
 # Summary
-- We can make ' using ' " \ NULL etc.,
+- When server do addslashes, we can make ' using ' " \ NULL etc.,
 '''
 
 
