@@ -19,4 +19,6 @@ response = requests.get(url + payload, headers=header)
 result = response.text
 if result.find("Clear!") != -1:
     end = result.split("Clear!")[0].split("<h2>")[1]
+    if end.find("admin") != -1:
+        end = result.split("Clear!")[0].split("<h2>")[2]
     print(end+"Clear!")

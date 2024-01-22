@@ -50,5 +50,7 @@ data = "?pw="+a+b+c
 response = requests.get(url + data, headers=header)
 result = response.text
 if result.find("Clear!") != -1:
-    end = result.split("Clear!")[0].split("<h2>")[2]
+    end = result.split("Clear!")[0].split("<h2>")[1]
+    if end.find("admin") != -1:
+        end = result.split("Clear!")[0].split("<h2>")[2]
     print(end+"Clear!")
