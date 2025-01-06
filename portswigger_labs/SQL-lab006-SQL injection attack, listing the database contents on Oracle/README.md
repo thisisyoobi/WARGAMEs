@@ -1,4 +1,4 @@
-# Lab: SQL injection attack, listing the database contents on non-Oracle databases
+# Lab: SQL injection attack, listing the database contents on Oracle
 
 ## Description
 ```
